@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ChessAppNew.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="ChessAppNew.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Загрузка и выполнение методов">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*" Margin="10">
+        <!-- Верхняя панель с путем к библиотеке -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+            <TextBox Width="400" Watermark="Путь к библиотеке" Text="{Binding AssemblyPath}"/>
+            <Button Content="Загрузить" Command="{Binding LoadAssemblyCommand}"/>
+        </StackPanel>
+
+        <!-- Основная область с классами и методами -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*,*" RowDefinitions="Auto,*" Margin="0,10,0,0">
+            <!-- Список классов -->
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Классы" FontWeight="Bold"/>
+            <ListBox Grid.Row="1" Grid.Column="0" 
+                     ItemsSource="{Binding Classes}"
+                     SelectedItem="{Binding SelectedClass}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- Список методов -->
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Методы" FontWeight="Bold"/>
+            <ListBox Grid.Row="1" Grid.Column="1" 
+                     ItemsSource="{Binding Methods}"
+                     SelectedItem="{Binding SelectedMethod}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- Параметры метода -->
+            <StackPanel Grid.Row="0" Grid.Column="2" Grid.RowSpan="2">
+                <TextBlock Text="Параметры" FontWeight="Bold" Margin="0,0,0,10"/>
+                <ItemsControl ItemsSource="{Binding Parameters}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                <TextBlock Text="{Binding Name}" Width="100"/>
+                                <TextBox Width="200" Text="{Binding Value}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Content="Выполнить" 
+                        Command="{Binding ExecuteMethodCommand}"
+                        HorizontalAlignment="Right"
+                        Margin="0,10,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
